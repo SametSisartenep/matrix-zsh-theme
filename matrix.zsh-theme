@@ -12,10 +12,10 @@
 local return_code="%(?..%{$fg_bold[red]%}%? ↵%{$reset_color%})"
 
 function my_git_prompt_info() {
-	ref=$(git symbolic-ref HEAD 2> /dev/null) || return
-	GIT_STATUS=$(git_prompt_status)
-	[[ -n $GIT_STATUS ]] && GIT_STATUS=" $GIT_STATUS"
-	echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$GIT_STATUS$ZSH_THEME_GIT_PROMPT_SUFFIX"
+  ref=$(git symbolic-ref HEAD 2> /dev/null) || return
+  GIT_STATUS=$(git_prompt_status)
+  [[ -n $GIT_STATUS ]] && GIT_STATUS=" $GIT_STATUS"
+  echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$GIT_STATUS$ZSH_THEME_GIT_PROMPT_SUFFIX"
 }
 
 function precmd () {
@@ -28,12 +28,16 @@ function preexec () {
 }
 
 # Colored prompt
-ZSH_THEME_COLOR_USER="040" 
-ZSH_THEME_COLOR_HOST="028" 
-ZSH_THEME_COLOR_PWD="049" 
+ZSH_THEME_COLOR_USER="040"
+ZSH_THEME_COLOR_HOST="028"
+ZSH_THEME_COLOR_PWD="049"
+
+prompt_indicator=$'%B%(?.%{\e[33;1m%}.%{\e[01;31m%})%(!.#.)%# %{\e[00m%}%b'
+
 test -n "$SSH_CONNECTION" && ZSH_THEME_COLOR_USER="red" && ZSH_THEME_COLOR_HOST="red"
 test `id -u` = 0 && ZSH_THEME_COLOR_USER="magenta" && ZSH_THEME_COLOR_HOST="magenta"
-PROMPT='%{$FG[$ZSH_THEME_COLOR_USER]%}%n%{$FG[036]%}@%{$FG[$ZSH_THEME_COLOR_HOST]%}%M%{$reset_color%}:%{$FG[$ZSH_THEME_COLOR_PWD]%}%~%{$reset_color%} $(my_git_prompt_info)%(!.#.$) '
+
+PROMPT='%{$FG[$ZSH_THEME_COLOR_USER]%}%n%{$FG[036]%}@%{$FG[$ZSH_THEME_COLOR_HOST]%}%M%{$reset_color%}:%{$FG[$ZSH_THEME_COLOR_PWD]%}%~%{$reset_color%} $(my_git_prompt_info)$prompt_indicator'
 RPS1="${return_code}"
 
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[cyan]%}("
